@@ -22,8 +22,11 @@ def convert_to_base64(input: TextInput, x_api_key: str = Header(...)):
         raise HTTPException(status_code=401, detail="Invalid API Key")
 
     try:
-        # Convertir texto a Base64
-        base64_encoded = base64.b64encode(input.text.encode("utf-8")).decode("utf-8")
+        # Reemplazar caracteres \n con saltos de línea reales
+        cleaned_text = input.text.replace("\\n", "\n")
+        
+        # Convertir texto limpio a Base64
+        base64_encoded = base64.b64encode(cleaned_text.encode("utf-8")).decode("utf-8")
         return {"base64": base64_encoded}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
